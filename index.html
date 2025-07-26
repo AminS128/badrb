@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="badrb.js"></script>
+        <script src="samples.js"></script>
+    </head>
+    <body>
+
+        <canvas width="512" height="512" id="canvas"></canvas>
+
+        <script>
+
+            const ctx = document.getElementById('canvas').getContext('2d')
+
+            const rbsystem = new RigidSystem(RBsamples.randomSquares)
+
+            function iterate(){
+
+                for(var i = 0; i < 8; i++){rbsystem.iterate()}
+
+                ctx.fillStyle=  "#888888"
+                ctx.fillRect(0, 0, 512, 512)
+                rbsystem.draw(ctx)
+
+            }
+
+            setInterval(iterate, 16)
+            
+        </script>
+    </body>
+</html>
+
