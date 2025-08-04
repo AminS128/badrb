@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BadRB Demo</title>
+        <link rel="stylesheet" href="../main.css">
+        <script src="badrb.js"></script>
+        <script src="rbsamples.js"></script>
+    </head>
+    <body>
+
+        <canvas id="canvas-main" style="width:100vw;height:100vh"></canvas>
+
+        <script>
+            const c = document.getElementById('canvas-main')
+            const ctx = c.getContext('2d')
+            const rbsystem = new RigidSystem(RBsamples.angryBirds())
+            c.width=c.clientWidth;c.height=c.clientHeight
+            rbsystem.physics.bounds = {x:768, y:512}
+            rbsystem.start(30, ctx)
+            rbsystem.physics.substeps = 16 // reduced
+            rbsystem.physics.freezing.timeReq=3 // much reduced
+            rbsystem.physics.freezing.torqueMult = 1000 // needs to be much higher for these guys
+            rbsystem.physics.freezing.actionThreshold = 200 // higher
+        </script>
+
+        <script>if(document.body.clientWidth < rbsystem.physics.bounds.x){alert('If you are on mobile, please consider turning landscape')}</script>
+
+        <script src="control.js"></script>
+    </body>
+</html>

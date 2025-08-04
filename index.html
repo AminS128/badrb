@@ -2,31 +2,30 @@
 <html>
     <head>
         <script src="badrb.js"></script>
-        <script src="samples.js"></script>
+        <script src="rbsamples.js"></script>
+        <link rel="stylesheet" href="../main.css">
     </head>
     <body>
 
         <canvas width="512" height="512" id="canvas"></canvas>
+        
+        <!-- <canvas width="512" height="512" id="canvas2"></canvas> -->
 
         <script>
 
             const ctx = document.getElementById('canvas').getContext('2d')
-
-            const rbsystem = new RigidSystem(RBsamples.randomSquares)
-
-            function iterate(){
-
-                for(var i = 0; i < 8; i++){rbsystem.iterate()}
-
-                ctx.fillStyle=  "#888888"
-                ctx.fillRect(0, 0, 512, 512)
-                rbsystem.draw(ctx)
-
-            }
-
-            setInterval(iterate, 16)
+            const rbsystem = new RigidSystem(RBsamples.randomQuads(60))
+            rbsystem.start(45, ctx)
+            
+            // const ctx2 = document.getElementById('canvas2').getContext('2d')
+            // const rbsystem2 = new RigidSystem(RBsamples.tower())
+            // rbsystem2.start(30, ctx2)
             
         </script>
+        <br>
+        <a href="demo.html">demo of BadRB used in an application proper</a>
+
+        <!-- <script src="control.js"></script> -->
     </body>
 </html>
 
