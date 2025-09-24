@@ -615,7 +615,7 @@ RigidSystem.prototype.draw = function(ctx){
         this.rblist[i].draw(ctx)
     }
     ctx.fillStyle = "#55ff55"// fps display
-    ctx.fillText(this.pastFrames.length, 10, 20)
+    ctx.fillText((this.pastFrames||[]).length, 10, 20)
     // visual: draw bounding shapes
     // for(var i = 0; i < this.rblist.length; i ++){
     //     ctx.fillStyle = '#ff00ff33'
