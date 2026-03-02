@@ -157,14 +157,27 @@ RigidBody.prototype.interactWith = function(other){
     // if they are, finds desired displacement
     // sums them, torques, etc
 
-    // sample points: all vertices + random point
+    // sample points: all vertices + some midpoints + optional random point
     let samples = []
-    this.space.forEach((value)=>{samples.push(value)})// ughhhhhhhhhh js references suck
+
+    // add vertices
+    this.space.forEach((value, index)=>{samples.push(value)})
+
+    this.space.forEach((value, index)=>{// add midpoints
+        if(Math.random() < this.physics.midpointChance){
+            let nextpoint = this.space[index + 1 >= this.space.length ? 0 : index + 1]
+            samples.push([
+                0.5*(value[0] + nextpoint[0]),
+                0.5*(value[1] + nextpoint[1]),
+            ])
+        }
+    })
+
+
     for(var i = 0; i < this.physics.randomSamples; i ++){
         let extra = this.getRandomPoint(8)
         if(extra){samples.push(extra)}
     }
-    // if(Math.random()<0.001){console.log(samples)}
 
     
     for(var i = 0; i < samples.length; i ++){
@@ -242,7 +255,7 @@ RigidBody.prototype.interactWith = function(other){
                     repulse[1]*=magnitude
                 }
 
-                const factor = -0.8 - (this.offsets[i]*this.physics.offsetStrength||0)
+                const factor = -0.8 - (this.offsets[i]*this.physics.offsetStrength||0) * this.physics.collisionStrength
 
                 repulse[0]*=factor
                 repulse[1]*=factor
@@ -253,6 +266,8 @@ RigidBody.prototype.interactWith = function(other){
                         (this.forces[i] || [0,0])[1] + repulse[1],
                     ]
                 }else{// if this is a random sample/extraneous
+                    repulse[0]*=this.physics.extraMult
+                    repulse[1]*=this.physics.extraMult
                     this.extraforces.push([
                         [p[0]-this.x, p[1]-this.y],[repulse[0],repulse[1]]
                     ])
@@ -504,14 +519,17 @@ function RigidSystem(list){
         nonOptimalFaceThreshold:0.5,// threshold under which a non-minimum displacement distance might be accepted
         squaredCollisions:true, // whether or not collision magnitude should be squared (true => nicer collisions)
         boundsMultiplier:2,// force multiplier on bounds
-        randomSamples:2,// number of additional samples (in addition to vertices)
+        collisionStrength:0.5,// strength of all collisions
+        midpointChance:0,// chance that a midpoint is checked on a given step
+        extraMult:0.6,// force mult on midpoints and additional samples
+        randomSamples:1,// number of additional samples (in addition to vertices)
         substeps:32, // subframes per frame
         autoSubsteps:true,// whether or not to auto adjust substeps based on rb count
         friction:0.997,// tiny friction for anti bobbing in ground
         frictionThreshold:2,// amount of force off bounds to activate bounds friction
         positionMult:0.6,// how much of overall[] displacement should apply directly to position
         inexact:0.1,// +/- on mesh coords on rb (to keep things from intersecting from perfect matched meshes)
-        inexactJiggle:2,// offset for specially jiggled vertices, like .inexact but specialized
+        inexactJiggle:0.2,// offset for specially jiggled vertices, like .inexact but specialized
         offsetStrength:0.5, // how much the jiggle for a corner should increase its repulsion on collision
         freezing:{// objects which are ''at rest'' freeze in place
             enabled:true,

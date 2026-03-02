@@ -14,8 +14,27 @@
         <script>
 
             const ctx = document.getElementById('canvas').getContext('2d')
-            const rbsystem = new RigidSystem(RBsamples.randomQuads(60))
+            const rbsystem = new RigidSystem(RBsamples.tower())
             rbsystem.start(45, ctx)
+
+            // document.addEventListener('keydown', ()=>{
+            //     let bird = RBsamples.createAngryBird(510, 400, 10)
+            //     bird.vx = -140
+            //     bird.vy = -40
+            //     rbsystem.add(bird)
+            //     console.log(bird)
+            // })
+
+            // rbsystem.overrideDraw((ctx, ts)=>{
+            //     ctx.fillStyle="#88888833"
+            //     ctx.fillRect(0, 0, ts.physics.bounds.x, ts.physics.bounds.y)
+            //     for(var i = 0; i < ts.rblist.length; i ++){
+            //         ts.rblist[i].draw(ctx)
+            //     }
+            //     ctx.fillStyle = "#55ff55"// fps display
+            //     ctx.fillText((ts.pastFrames||[]).length, 10, 20)
+            // })
+            
             
             // const ctx2 = document.getElementById('canvas2').getContext('2d')
             // const rbsystem2 = new RigidSystem(RBsamples.tower())
